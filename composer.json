@@ -1,0 +1,15 @@
+{
+    "name": "akamai-ccu3-purge",
+    "description": "Akamai CCU v3 Purge",
+    "license": "BEER-WARE LICENSE (Revision 42)",
+    "authors": [
+        {
+            "name": "Dennis Hantke",
+            "email": "dennis.hantke@bytescreen.de"
+        }
+    ],
+    "require": {
+        "akamai-open/edgegrid-client": "0.6.*",
+        "league/climate": "~3.1"
+    }
+}
