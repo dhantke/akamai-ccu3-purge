@@ -11,10 +11,15 @@ __without composer:__
 
 ### Sample edgerc file content
 [default]
+
 host = xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx.luna.akamaiapis.net/
+
 client_token = xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx
+
 client_secret = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=
+
 access_token = xxxx-xxxxxxxxxxxxxxxx-xxxxxxxxxxxxxxxx
+
 max_body = 131072
 
 _a sample file is also located under /resources_
