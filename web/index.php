@@ -1,4 +1,5 @@
 <?php
+// composer autoload
 require __DIR__ . '/../vendor/autoload.php';
 
 	// check for uploaded file
@@ -6,10 +7,9 @@ require __DIR__ . '/../vendor/autoload.php';
 		// get temp file path
 		$edgerc = $_FILES['edgerc']['tmp_name'];
 		if (file_exists($edgerc) && is_uploaded_file($edgerc)) { // handle uploaded file
-
 			// create client
 			$edgeGridClient = \Akamai\Open\EdgeGrid\Client::createFromEdgeRcFile('default', $edgerc);
-			
+			// build the POST body
 			$purge_body = [
 					'hostname' => $_POST['hostname'],
 					'objects' => [
@@ -19,17 +19,21 @@ require __DIR__ . '/../vendor/autoload.php';
 			];
 			
 			try {
-				$responseBody = $edgeGridClient->post('/ccu/v3/invalidate/url', [
+				echo "trying to purge objects: " . implode(", ", $purge_body['objects']) . "<br><br>";
+				// send purge request
+				$response = $edgeGridClient->post('/ccu/v3/invalidate/url', [
 						'body' => json_encode($purge_body),
 						'headers' => ['Content-Type' => 'application/json']
 				]);
 			
-				$response = json_decode($responseBody->getBody());
-				echo 'Success (' .$purge->getStatusCode(). ')' . PHP_EOL;
-				echo 'Estimated Purge Time: ' .$response->estimatedSeconds. 's' . PHP_EOL;
+				$responseBody = json_decode($response->getBody());
+				echo 'Success (' . $response->getStatusCode() . ')' . PHP_EOL;
+				echo 'Estimated Purge Time: ' . $responseBody->estimatedSeconds . 's' . PHP_EOL;
+				echo "<br><br>";
 			} catch (\GuzzleHttp\Exception\ClientException $e) {
-				echo "An error occurred: " .$e->getMessage(). "\n";
+				echo "An error occurred: " . $e->getMessage() . PHP_EOL;
 				echo "Please try again with --debug or --verbose flags.\n";
+				echo "<br><br>";
 			}
 		}
 		
