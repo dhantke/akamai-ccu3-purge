@@ -9,19 +9,24 @@ require __DIR__ . '/../vendor/autoload.php';
 		if (file_exists($edgerc) && is_uploaded_file($edgerc)) { // handle uploaded file
 			// create client
 			$edgeGridClient = \Akamai\Open\EdgeGrid\Client::createFromEdgeRcFile('default', $edgerc);
+			$edgeGridClient->setVerbose(true);
+			$edgeGridClient->setDebug(true);
 			// build the POST body
 			$purge_body = [
 					'hostname' => $_POST['hostname'],
 					'objects' => [
-							"/image.jpg",
-							"/styles.css"
+							"/com/de",
+							"/com/en"
 					]
 			];
 			
 			try {
 				echo "trying to purge objects: " . implode(", ", $purge_body['objects']) . "<br><br>";
+				// WORKAROUND: parse file again, because the properties of the clients are protected
+				$tmpCfg = file_get_contents($edgerc);
+				$tmpCfg = parse_ini_string($tmpCfg, true, INI_SCANNER_RAW);
 				// send purge request
-				$response = $edgeGridClient->post('/ccu/v3/invalidate/url', [
+				$response = $edgeGridClient->post($tmpCfg['default']['host'] . '/ccu/v3/invalidate/url', [
 						'body' => json_encode($purge_body),
 						'headers' => ['Content-Type' => 'application/json']
 				]);
